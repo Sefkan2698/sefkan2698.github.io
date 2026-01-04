@@ -23,7 +23,7 @@ const ITServicesSection = () => {
         "Netzwerk-Troubleshooting",
         "System-Wartung"
       ],
-      price: "39€/Stunde",
+      price: "69€/Stunde",
       priceNote: "Abrechnung im 15-Minuten-Takt",
       gradient: "from-blue-500 to-cyan-500",
       bgGradient: "from-blue-500/10 to-cyan-500/10"
