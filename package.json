@@ -11,8 +11,8 @@
     "deploy": "next build && touch out/.nojekyll"
   },
   "dependencies": {
-    "@emailjs/browser": "^4.4.1",
     "next": "^15.5.9",
+    "nodemailer": "^6.9.16",
     "react": "19.1.0",
     "react-dom": "19.1.0"
   },

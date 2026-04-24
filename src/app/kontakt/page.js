@@ -1,6 +1,5 @@
 'use client'
 import {React, useState, useEffect } from 'react';
-import emailjs from '@emailjs/browser';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import WhatsAppButton from '../components/WhatsAppButton';
@@ -60,11 +59,6 @@ export default function ContactPage() {
     }
   }, []);
 
-  // EmailJS initialisieren
-  useEffect(() => {
-    emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || 'K4-vvkf-F4guXuVKu');
-  }, []);
-
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     
@@ -114,29 +108,18 @@ export default function ContactPage() {
     
     setIsSubmitting(true);
     setSubmitStatus(null);
-    
-    // EmailJS Template-Parameter vorbereiten
-    const templateParams = {
-      from_name: `${formData.firstName} ${formData.lastName}`,
-      from_email: formData.email,
-      phone: formData.phone || 'Nicht angegeben',
-      company: formData.company || 'Nicht angegeben',
-      category: formData.category,
-      message: formData.message,
-      to_name: 'SakaITS Team',
-      reply_to: formData.email
-    };
-    
+
     try {
-      // EmailJS senden
-      const response = await emailjs.send(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'service_rqqaej5',
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || 'template_61es09q',
-        templateParams
-      );
-      
-      console.log('Email erfolgreich gesendet:', response.status, response.text);
-      
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Request failed with status ${response.status}`);
+      }
+
       setSubmitStatus('success');
       setFormData({
         firstName: '',
@@ -148,12 +131,12 @@ export default function ContactPage() {
         message: ''
       });
       setEmailError('');
-      
+
     } catch (error) {
       console.error('Fehler beim Senden der Email:', error);
       setSubmitStatus('error');
     }
-    
+
     setIsSubmitting(false);
   };
 
